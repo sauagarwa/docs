@@ -1,0 +1,159 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=description content='Validated Patterns now includes the idea of "bootstrap" secrets that will be injected directly into your cluster during the secrets loading …'><meta name=author content="Martin Jackson"><meta name=theme-color content="#0066CC"><link rel=canonical href=https://validatedpatterns.io/blog/2026-05-12-introducing-bootstrap-secrets/><link rel=icon type=image/x-icon href=/favicon.ico><link rel=apple-touch-icon sizes=180x180 href=/images/validated-patterns.png><link rel=dns-prefetch href=//use.fontawesome.com><link rel=dns-prefetch href=//analytics.ossupstream.org><link rel=preconnect href=https://use.fontawesome.com crossorigin><meta property="og:title" content='Introducing "Bootstrap" Secrets'><meta property="og:description" content='Validated Patterns now includes the idea of "bootstrap" secrets that will be injected directly into your cluster during the secrets loading …'><meta property="og:url" content="https://validatedpatterns.io/blog/2026-05-12-introducing-bootstrap-secrets/"><meta property="og:site_name" content="Validated Patterns"><meta property="og:locale" content="en_US"><meta property="og:image" content="https://validatedpatterns.io/og-images/blog/2026-05-12-introducing-bootstrap-secrets.svg"><meta property="og:image:alt" content='Introducing "Bootstrap" Secrets'><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:type" content="article"><meta property="article:published_time" content="2026-05-12T00:00:00Z"><meta property="article:modified_time" content="2026-05-12T00:00:00Z"><meta property="article:author" content="Martin Jackson"><meta property="article:tag" content="patterns"><meta property="article:tag" content="argocd"><meta property="article:tag" content="gitops"><meta property="article:tag" content="ansible"><meta property="article:tag" content="secrets"><meta name=twitter:card content="summary_large_image"><meta name=twitter:title content='Introducing "Bootstrap" Secrets'><meta name=twitter:description content='Validated Patterns now includes the idea of "bootstrap" secrets that will be injected directly into your cluster during the secrets loading …'><meta name=twitter:image content="https://validatedpatterns.io/og-images/blog/2026-05-12-introducing-bootstrap-secrets.svg"><meta name=twitter:image:alt content='Introducing "Bootstrap" Secrets'><meta name=twitter:site content="@RedHat"><meta name=twitter:creator content="@RedHat"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":"[{\"@type\":\"ListItem\",\"item\":\"https://validatedpatterns.io/\",\"name\":\"Home\",\"position\":1},{\"@type\":\"ListItem\",\"item\":\"https://validatedpatterns.io//blog\",\"name\":\"Blog\",\"position\":2},{\"@type\":\"ListItem\",\"item\":\"https://validatedpatterns.io//blog/2026-05-12-introducing-bootstrap-secrets\",\"name\":\"Introducing \\\"Bootstrap\\\" Secrets\",\"position\":3}]"}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"Introducing \u0022Bootstrap\u0022 Secrets","description":"Validated Patterns now includes the idea of \u0026#34;bootstrap\u0026#34; secrets that will be injected directly into your cluster during the secrets loading process.","image":{"@type":"ImageObject","url":"https:\/\/validatedpatterns.io\/images\/validated-patterns.png","width":1200,"height":630},"url":"https:\/\/validatedpatterns.io\/blog\/2026-05-12-introducing-bootstrap-secrets\/","datePublished":"2026-05-12T00:00:00Z","dateModified":"2026-05-12T00:00:00Z","author":{"@type":"Person","name":"Martin Jackson"},"publisher":{"@type":"Organization","name":"Validated Patterns","logo":{"@type":"ImageObject","url":"https:\/\/validatedpatterns.io\/images\/validated-patterns.png","width":200,"height":200}},"mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/validatedpatterns.io\/blog\/2026-05-12-introducing-bootstrap-secrets\/"},"keywords":"[\"patterns\",\"argocd\",\"gitops\",\"ansible\",\"secrets\"]"}</script><link rel=stylesheet href=https://validatedpatterns.io/sass/patternfly.css><link rel=stylesheet href=https://validatedpatterns.io/sass/patternfly-addons.css><link rel=stylesheet href=/css/custom.css><link rel=stylesheet href=https://use.fontawesome.com/releases/v6.3.0/css/solid.css><link rel=stylesheet href=https://use.fontawesome.com/releases/v6.3.0/css/fontawesome.css><link rel=stylesheet href=https://use.fontawesome.com/releases/v6.3.0/css/brands.css><title>Introducing "Bootstrap" Secrets | Validated Patterns</title>
+<script>var _paq=window._paq=window._paq||[];_paq.push(["trackPageView"]),_paq.push(["enableLinkTracking"]),function(){e="//analytics.ossupstream.org/",_paq.push(["setTrackerUrl",e+"matomo.php"]),_paq.push(["setSiteId","8"]);var e,n=document,t=n.createElement("script"),s=n.getElementsByTagName("script")[0];t.async=!0,t.src=e+"matomo.js",s.parentNode.insertBefore(t,s)}()</script></head><body><div class=pf-c-page><header class=pf-c-page__header><div class=pf-c-page__header-brand><a href=/ class=pf-c-page__header-brand-link><img src=/images/validated-patterns.png alt="Validated Patterns"></a></div><div class=pf-c-page__header-tools><nav class="pf-c-nav pf-m-horizontal mobile-nav" role=navigation id=mobile-nav><ul class=pf-c-nav__list><li class=pf-c-nav__item><a class=pf-c-nav__link href=/patterns/ title=Patterns>Patterns</a></li><li class=pf-c-nav__item><a class=pf-c-nav__link href=/learn/ title="Learn about Validated Patterns">Learn</a></li><li class=pf-c-nav__item><a class=pf-c-nav__link href=/demos/ title="Interactive demos">Demos</a></li><li class=pf-c-nav__item><a class=pf-c-nav__link href=/workshop/ title="Validated Patterns Workshop">Workshop</a></li><li class=pf-c-nav__item><a class=pf-c-nav__link href=/contribute/ title="Contribute to Validated Patterns">Contribute</a></li><li class="pf-c-nav__item pf-m-current"><a class=pf-c-nav__link href=/blog/ title=Blog>Blog</a></li><li class=pf-c-nav__item><a class=pf-c-nav__link href=/ci/ title="CI Status">Status</a></li></ul></nav><form id=search action=https://validatedpatterns.io/search/ method=get><div class=pf-c-search-input><div class=pf-c-input-group><div class=pf-c-search-input__bar><span class=pf-c-search-input__text><span class=pf-c-search-input__icon><i class="fas fa-search fa-fw" aria-hidden=true></i>
+</span><input id=search-input name=query class=pf-c-search-input__text-input type=text placeholder=Search aria-label=Search></span></div><button form=search class="pf-c-button pf-m-control" type=submit aria-label=Search value=search>
+<i class="fas fa-arrow-right" aria-hidden=true></i></button></div></div></form></div><div class=pf-c-page__header-tools-group><button class="pf-c-button pf-m-plain main-nav-toggle" type=button aria-label="Main navigation" id=main-nav-toggle>
+<i class="fas fa-chevron-down" aria-hidden=true></i></button></div></header><div class=pf-c-page__sidebar><div class=pf-c-page__sidebar-body><div class="pf-c-nav pf-m-light"><ul class=pf-c-nav__list><li class=pf-c-nav__item><a href=/blog/ class=pf-c-nav__link><span class="pf-c-icon pf-m-md pf-m-inline"><span class=pf-c-icon__content><i class="fas fa-angle-left" aria-hidden=true></i>
+</span></span><span style=padding-left:10px>Back to Blog</span></a></li></ul></div></div></div><main class=pf-c-page__main tabindex=0><section class=pf-c-page__main-section><nav class=otp-mobile aria-label="On this page"><button class=otp-mobile__toggle type=button aria-expanded=false>
+<span class=otp-mobile__label>On this page</span>
+<span class=otp-mobile__chevron aria-hidden=true><i class="fas fa-chevron-right"></i>
+</span><span class=otp-mobile__current>Overview</span></button><div class=otp-mobile__dropdown><nav><ul class=otp-list><li class=otp-item><ul class=otp-list><li class=otp-item><a class=otp-link href=#_preamble>Preamble</a></li><li class=otp-item><a class=otp-link href=#_what_are_bootstrap_secrets>What are "bootstrap" secrets?</a></li><li class=otp-item><a class=otp-link href=#_how_to_use_bootstrap_secrets>How to use bootstrap secrets</a></li><li class=otp-item><a class=otp-link href=#_kubernetes_specific_secret_injector_features>Kubernetes-specific secret injector features</a></li><li class=otp-item><a class=otp-link href=#_example_bootstrap_secret_file>Example Bootstrap Secret file</a></li><li class=otp-item><a class=otp-link href=#_private_git_repositories_a_practical_use_of_this_feature>Private Git Repositories - a Practical Use of this feature</a></li><li class=otp-item><a class=otp-link href=#_technical_details_of_the_change>Technical Details of the change</a></li><li class=otp-item><a class=otp-link href=#_summary>Summary</a></li></ul></li></ul></nav></div></nav><div class=pf-u-display-flex><aside class=otp-desktop aria-label="On this page"><div class=otp-desktop__header><h2 class=otp-desktop__title>On this page</h2></div><nav><ul class=otp-list><li class=otp-item><ul class=otp-list><li class=otp-item><a class=otp-link href=#_preamble>Preamble</a></li><li class=otp-item><a class=otp-link href=#_what_are_bootstrap_secrets>What are "bootstrap" secrets?</a></li><li class=otp-item><a class=otp-link href=#_how_to_use_bootstrap_secrets>How to use bootstrap secrets</a></li><li class=otp-item><a class=otp-link href=#_kubernetes_specific_secret_injector_features>Kubernetes-specific secret injector features</a></li><li class=otp-item><a class=otp-link href=#_example_bootstrap_secret_file>Example Bootstrap Secret file</a></li><li class=otp-item><a class=otp-link href=#_private_git_repositories_a_practical_use_of_this_feature>Private Git Repositories - a Practical Use of this feature</a></li><li class=otp-item><a class=otp-link href=#_technical_details_of_the_change>Technical Details of the change</a></li><li class=otp-item><a class=otp-link href=#_summary>Summary</a></li></ul></li></ul></nav></aside><div class=pf-c-content><h1>Introducing "Bootstrap" Secrets</h1><div style="margin:10px 0">by Martin Jackson</div><div style="margin:10px 0">May 12, 2026</div><div style="margin:20px 0"><span class="pf-c-label pf-m-grey"><span class=pf-c-label__content>patterns</span>
+</span><span class="pf-c-label pf-m-grey"><span class=pf-c-label__content>argocd</span>
+</span><span class="pf-c-label pf-m-grey"><span class=pf-c-label__content>gitops</span>
+</span><span class="pf-c-label pf-m-grey"><span class=pf-c-label__content>ansible</span>
+</span><span class="pf-c-label pf-m-grey"><span class=pf-c-label__content>secrets</span></span></div><hr class=pf-c-divider><div class=page-abstract><div class=sect1><h2 id=_preamble><a class=anchor href=#_preamble></a>Preamble</h2><div class=sectionbody><div class=paragraph><p>We have recognized secrets as one of the challenges of GitOps since the beginning
+of the Validated Patterns initiative. As a consequence, we have put thought and
+effort into making the secrets management process with Validated Patterns as easy
+as we can, while still modeling good security practices.</p></div><div class=paragraph><p>One challenge that we have not fully addressed, though, is the occasional need to
+inject secrets into a cluster in order to enable basic cluster functionality. One
+example of when this might happen is when a cluster is attached to an enterprise
+storage array which requires secrets to be present to access the storage. Another
+good example is when the pattern itself is in a credential-protected repository,
+such that ArgoCD, the OpenShift GitOps Operator, needs credentials to be able to
+render the pattern. Previously, users had to use their own mechanisms to inject
+secrets into the cluster, and the Validated Patterns framework did not help with
+this.</p></div><div class=paragraph><p>With this blog post, we are happy to announce that the Validated Patterns framework
+now has a mechanism to help with this problem, which requires minimal effort to
+use and offers some convenience mechanisms, including all of the convenience
+functions (like path and ini_file parsing) that the Patterns secret loading system
+already uses. Additionally, it works within the existing Validated Patterns workflow.</p></div></div></div><div class=sect1><h2 id=_what_are_bootstrap_secrets><a class=anchor href=#_what_are_bootstrap_secrets></a>What are "bootstrap" secrets?</h2><div class=sectionbody><div class=paragraph><p>The "bootstrap" secrets process is somewhat exceptional. The vast majority of secrets in
+Validated Patterns usage are ordinary. But what if you need to do authentication to start
+installing your pattern? Specific examples are when you are using an authenticated private
+repository to hold the pattern itself, as well as any secrets you might need to create a
+default storageclass. In such a case, these secrets must be injected before the pattern
+object itself is created, and since it contains the list of namespaces to create, the early
+phase secrets have a "chicken-and-egg" problem. Previous instructions have provided for the
+manual creation of these objects, but this can be tedious and error prone.</p></div><div class=paragraph><p>Bootstrap secrets are injected immediately after the initial cluster validations in the
+ordinary installation flow. They are allowed to create their own namespaces, but to help with
+idempotence, they check to see if the namespace exists first, and only create if it is missing.</p></div></div></div><div class=sect1><h2 id=_how_to_use_bootstrap_secrets><a class=anchor href=#_how_to_use_bootstrap_secrets></a>How to use bootstrap secrets</h2><div class=sectionbody><div class=paragraph><p>The Validated Patterns secrets v2.0 file format adds a new section, <code>boostrap_secrets</code>. These
+secrets, and these only, will be considered in the "early" secrets installation phase. The
+early secrets installation phase happens just prior to the Patterns Operator and CR creation.
+This is because the pattern CR needs to be able to clone the repository in order to work. A
+secret that is linked to the Pattern CR will automatically be copied to Patterns-managed
+Argo instances.</p></div><div class=paragraph><p>Bootstrap secrets have some special properties:</p></div><div class="olist arabic"><ol class=arabic><li><p>They are always injected using the "none" injector.</p></li><li><p>They are allowed to create <code>targetNamespaces</code> if they do not already exist. (They check
+before creating them, to avoid overwriting existing namespaces with annotations.)</p></li><li><p>Bootstrap secrets loading is always attempted if the section is present, even if the global
+secrets loading feature is disabled via <code>global.secretsLoader.disabled</code> being set to <code>true</code>.</p></li></ol></div><div class=paragraph><p>Additionally, bootstrap secrets are checked and loaded during a <code>make load-secrets</code> run.</p></div></div></div><div class=sect1><h2 id=_kubernetes_specific_secret_injector_features><a class=anchor href=#_kubernetes_specific_secret_injector_features></a>Kubernetes-specific secret injector features</h2><div class=sectionbody><div class=paragraph><p>While it has long been possible, it has not been well documented (or advertized) that
+Validated Patterns can inject secrets directly into kubernetes. The currently available injectors
+that use kubernetes secret injection are <code>kubernetes</code> and <code>none</code>. (They were named based on the
+External Secrets backend they are intended to support.) Some additional conveniences
+are available in values-secret files for kubernetes secret injection, including:</p></div><div class=ulist><ul><li><p><code>targetNamespaces</code>: The same secret can be injected into multiple namespaces. This is useful,
+for example, when you have to inject the same ArgoCD secret into two or more different namespaces. The
+loader treats each secret/namespace as a separate item for injection. Of course a list containing
+one item is always acceptable as well. The loader will attempt to create a minimal namespace if it does
+not already exist, but only during the early (boostrap) secrets loading phase.</p></li><li><p><code>Labels and annotations</code>: You can add arbitrary labels and/or annotations to your secret objects.</p></li><li><p><code>type</code>: Some secret types benefit from having type associated with them. The secret loader
+defaults to <code>Opaque</code> when no type is specified, but will honor a type that is specified.</p></li></ul></div></div></div><div class=sect1><h2 id=_example_bootstrap_secret_file><a class=anchor href=#_example_bootstrap_secret_file></a>Example Bootstrap Secret file</h2><div class=sectionbody><div class=paragraph><p>Given following file, ~/values-secret.yaml:</p></div><div class=listingblock><div class=content><pre>---
+version: &#34;2.0&#34;
+
+bootstrap_secrets:
+  - name: test-secret
+    annotations:
+      validatedpatterns.io/example: foo
+    labels:
+      validatedpatterns.io/injected-secrets: &#34;true&#34;
+    targetNamespaces:
+      - default
+      - vp-gitops
+    type: kubernetes.io/basic
+    fields:
+      - name: username
+        value: user
+      - name: password
+        value: password
+
+secrets:
+# ...
+# As before</pre></div></div><div class=paragraph><p>The loader would generate and inject the following two objects:</p></div><div class=listingblock><div class=content><pre>apiVersion: v1
+data:
+  password: cGFzc3dvcmQ=
+  username: dXNlcg==
+kind: Secret
+metadata:
+  annotations:
+    validatedpatterns.io/example: foo
+  creationTimestamp: &#34;2026-05-12T16:47:15Z&#34;
+  labels:
+    validatedpatterns.io/injected-secrets: &#34;true&#34;
+  name: test-secret
+  namespace: default
+  resourceVersion: &#34;158877&#34;
+  uid: be74939e-6acc-41e8-96f3-0439f9e2e0af
+type: kubernetes.io/basic</pre></div></div><div class=paragraph><p>and</p></div><div class=listingblock><div class=content><pre>apiVersion: v1
+data:
+  password: cGFzc3dvcmQ=
+  username: dXNlcg==
+kind: Secret
+metadata:
+  annotations:
+    validatedpatterns.io/example: foo
+  creationTimestamp: &#34;2026-05-12T16:48:02Z&#34;
+  labels:
+    validatedpatterns.io/injected-secrets: &#34;true&#34;
+  name: test-secret
+  namespace: vp-gitops
+  resourceVersion: &#34;158893&#34;
+  uid: 311ba451-da6d-427b-8e0f-1293ef7b18a4
+type: kubernetes.io/basic</pre></div></div></div></div><div class=sect1><h2 id=_private_git_repositories_a_practical_use_of_this_feature><a class=anchor href=#_private_git_repositories_a_practical_use_of_this_feature></a>Private Git Repositories - a Practical Use of this feature</h2><div class=sectionbody><div class=paragraph><p>The primary use of this feature is to enable the use of private repositories to hold Validated Patterns.
+These repositories need authentication. The patterns framework has included support for private repositories
+for some time, but this feature introduces the ability to inject the secret necessary to run those patterns
+without extra manual steps.</p></div><div class=paragraph><p>Given the following repository definition in values-global.yaml:</p></div><div class=listingblock><div class=content><pre>---
+global:
+  pattern: private-pattern-test
+  options:
+    useCSV: false
+    syncPolicy: Automatic
+    installPlanApproval: Automatic
+main:
+  git:
+    repoURL: git@github.com:mhjacks/private-pattern-test.git
+    revision: main
+  tokenSecret: private-repo
+  tokenSecretNamespace: patterns-operator
+  clusterGroupName: hub
+  multiSourceConfig:
+    enabled: true
+    clusterGroupChartVersion: &#34;0.9.*&#34;</pre></div></div><div class=paragraph><p>The following secret file configuration will inject the private-repo secret needed into the
+patterns-operator namespace (creating it if it does not already exist, which at the time it
+is normally installed, it will not):</p></div><div class=listingblock><div class=content><pre>---
+version: &#34;2.0&#34;
+
+bootstrap_secrets:
+  - name: private-repo
+    targetNamespaces:
+      - patterns-operator
+    labels:
+      argocd.argoproj.io/secret-type: repository
+    fields:
+      - name: type
+        value: git
+      - name: sshPrivateKey
+        path: ~/.ssh/id_ed25519
+      - name: url
+        value: git@github.com:mhjacks/private-pattern-test.git</pre></div></div></div></div><div class=sect1><h2 id=_technical_details_of_the_change><a class=anchor href=#_technical_details_of_the_change></a>Technical Details of the change</h2><div class=sectionbody><div class=paragraph><p>The "bootstrap" loading process ignores the values-global secrets backend setting during the bootstrap
+phase, forcing the use of the "none" provider instead, which will use the kubernetes secrets injection
+roles with special flags enabled. It searches the discovered secrets file for the bootstrap secrets
+section, loading them as described above. This step runs between cluster validation and pattern operator and object
+creation. The regular secrets injection happens after pattern creation, as before. It is also possible
+to force bootstrap secret loading via <code>./pattern.sh ansible-playbook rhvp.cluster_utils.load_bootstrap_secrets</code>,
+but this is normally not necessary as it is integrated into the typical <code>make install</code> process, as
+well as the <code>make load-secrets</code> process.</p></div><div class=paragraph><p>The benefit to this approach is that all existing patterns can make use of this feature without
+changing their Makefiles. Patterns without the bootstrap secrets section will skip bootstrap secrets
+loading as they will have no bootstrap secrets to load.</p></div><div class=paragraph><p>For each kubernetes secret that is generated, the loader will check for the namespace, and create a
+minimal namespace if it does not already exist, and then create the secret.</p></div></div></div><div class=sect1><h2 id=_summary><a class=anchor href=#_summary></a>Summary</h2><div class=sectionbody><div class=paragraph><p>This change improves the Validated Patterns experience with secrets, streamlining the process of
+installing private patterns. Additional cases, like injecting secrets for CSI drivers, is also
+possible using this new mechanism.</p></div></div></div></div></div></div></section><section id=prefooter class="pf-c-page__main-section footer-dark"><div class="pf-l-grid prefooter-menu-grid"><div class="pf-l-grid__item pf-m-12-col-on-sm pf-m-6-col-on-md pf-m-offset-1-col-on-md pf-u-mb-lg pf-u-mb-0-on-sm"><div class="pf-l-grid pf-u-py-xl"><div class="pf-l-grid__item pf-m-6-col-on-sm pf-m-4-col-on-md pf-u-ml-md pf-u-ml-0-on-md pf-u-mb-xl pf-u-mb-0-on-md"><p class="pf-c-title footer-menu-title">QUICKLINKS</p><nav aria-label="Quick Links"><ul class="pf-c-list pf-m-plain"><li><i class="prefooter-icon fa-brands fa-github"></i>
+<a class=footer-link aria-label="GitHub repository" href=https://github.com/validatedpatterns/docs>GitHub repository</a></li><li><i class="prefooter-icon fas fa-check-circle"></i>
+<a class=footer-link aria-label="Available patterns" href=/patterns>Available patterns</a></li></ul></nav></div><div class="pf-l-grid__item pf-m-6-col-on-sm pf-m-4-col-on-md pf-u-mt-lg pf-u-mt-0-on-sm pf-u-ml-md pf-u-ml-0-on-md pf-u-mb-xl pf-u-mb-0-on-md"><p class="pf-c-title footer-menu-title">CONTRIBUTE</p><nav aria-label=Contribute><ul class="pf-c-list pf-m-plain ws-org-pfsite-footer-menu-list"><li><i class="prefooter-icon fas fa-pen"></i>
+<a class=footer-link aria-label="Documentation contributor guidelines" href=/contribute/contribute-to-docs/>Documentation</a></li><li><i class="prefooter-icon fas fa-code"></i>
+<a class=footer-link aria-label="How to create a new pattern" href=/contribute/creating-a-pattern/>Patterns</a></li></ul></nav></div><div class="pf-l-grid__item pf-m-6-col-on-sm pf-m-4-col-on-md pf-u-mt-lg pf-u-mt-0-on-md pf-u-ml-md pf-u-ml-0-on-md"><p class="pf-c-title footer-menu-title">STAY IN TOUCH</p><nav aria-label="Stay in touch"><ul class="pf-c-list pf-m-plain"><li><i class="prefooter-icon fa-brands fa-slack"></i>
+<a href=https://openshiftcommons.slack.com/archives/C059ABEU2ET class=footer-link target=top aria-label="Join the Validated Patterns Slack">Slack</a></li><li><i class="prefooter-icon fa-brands fa-google"></i>
+<a href=https://groups.google.com/g/validatedpatterns class=footer-link target=top aria-label="Join the Validated Patterns mailing list">Mailing list</a></li><li><i class="prefooter-icon fas fa-calendar"></i>
+<a href="https://calendar.google.com/calendar/embed?src=c_59a8346c25c7a71edd29f0f71c63b9140879b29cc65c8289b91015dcb5a53ba0%40group.calendar.google.com&ctz=Europe%2FLondon" class=footer-link target=top aria-label="Join the Validated Patterns mailing list">Add calendar</a></li></ul></nav></div></div></div><div class="pf-l-grid__item pf-m-12-col-on-sm pf-m-4-col-on-md"><div class="pf-l-grid pf-u-pt-xl"><div class="pf-l-grid__item pf-u-px-xl"><a class="pf-c-page__header-brand-link pf-c-brand pf-u-pb-md" href=/><img class=pf-c-brand src=/images/validated-patterns.png alt="Validated Patterns"></a><p class=footer-link>Validated Patterns are an evolution of how you deploy applications in a hybrid cloud. With a pattern, you can automatically deploy a full application stack through a GitOps-based framework. With this framework, you can create business-centric solutions while maintaining a level of Continuous Integration (CI) over your application.</p></div></div></div></div></section><footer id=footer class="footer-dark pf-m-no-fill pf-l-flex pf-m-justify-content-center pf-m-align-items-center footer-center"><div class="pf-l-flex__item pf-u-text-align-center"><a href=//www.redhat.com target=top aria-label="Visit Red Hat.com"><img src=/images/RHlogo.svg alt="Red Hat logo" width=145px height=613px></a><span class=site-copyright>Copyright &copy; 2026 Red Hat, Inc. All third-party trademarks are the property of their respective owners.</span></div><script src=/js/bootstrap.bundle.js></script><script src=/js/toc.js></script></footer></main></div><script src=/js/codeblock.js></script><script src=/js/mobile-nav.js></script><script src=/js/page-actions.js></script></body></html>
